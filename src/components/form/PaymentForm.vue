@@ -2,49 +2,83 @@
 
 <template>
   <v-container>
-    <v-layout row>
-      <v-flex xs12>
-        <v-text-field label="NAME" color="indigo darken-4"/>
-      </v-flex>
-    </v-layout>
-    <v-layout row>
-      <v-flex xs12>
-        <v-text-field
-          v-validate="require|credit_card"
-          name="credit_card"
-          label="CARD NUMBER"
-          color="indigo darken-4"
-          append-icon="credit_card"
-        />
-      </v-flex>
-    </v-layout>
-    <v-layout row justify-space-between>
-      <v-flex xs5>
-        <v-select :items="dates" label="EXP DATE" color="indigo darken-4"/>
-      </v-flex>
-      <v-flex xs2>
-        <v-select :items="years" label="YEAR" color="indigo darken-4"/>
-      </v-flex>
-      <v-flex xs2>
-        <v-text-field type="password" counter="3" label="CVC" color="indigo darken-4"/>
-      </v-flex>
-    </v-layout>
-    <v-layout>
-      <v-checkbox :label="`Save my card for future purchases`" color="indigo darken-4"></v-checkbox>
-    </v-layout>
-    <v-btn dark large color="indigo darken-4">
-      <span @click="submit">PAY NOW</span>
-    </v-btn>
+    <v-form ref="form" v-model="valid" lazy-validation>
+      <v-layout row>
+        <v-flex xs12>
+          <v-text-field
+            :rules="[v => !!v || 'Name is required']"
+            v-model="name"
+            label="NAME"
+            color="indigo darken-4"
+          />
+        </v-flex>
+      </v-layout>
+      <v-layout row>
+        <v-flex xs12>
+          <v-text-field
+            :rules="[v => !!v || 'Card number is required']"
+            v-model="cardNumber"
+            label="CARD NUMBER"
+            color="indigo darken-4"
+            append-icon="credit_card"
+          />
+        </v-flex>
+      </v-layout>
+      <v-layout row justify-space-between>
+        <v-flex xs5>
+          <v-select
+            :rules="[v => !!v || 'Date required']"
+            v-model="date"
+            :items="dates"
+            label="EXP DATE"
+            color="indigo darken-4"
+          />
+        </v-flex>
+        <v-flex xs2>
+          <v-select
+            :rules="[v => !!v || 'Year required']"
+            v-model="year"
+            :items="years"
+            label="YEAR"
+            color="indigo darken-4"
+          />
+        </v-flex>
+        <v-flex xs2>
+          <v-text-field
+            type="password"
+            counter="3"
+            v-model="cvc"
+            label="CVC"
+            color="indigo darken-4"
+          />
+        </v-flex>
+      </v-layout>
+      <v-layout>
+        <v-checkbox :label="`Save my card for future purchases`" color="indigo darken-4"></v-checkbox>
+      </v-layout>
+      <v-btn dark large color="indigo darken-4">
+        <span :disabled="!valid" @click="submit">PAY NOW</span>
+      </v-btn>
+    </v-form>
   </v-container>
 </template>
 
 <script>
+import cardValidator from "@/api/cardValidator";
+
 export default {
   name: "PaymentForm",
 
   data() {
     return {
       // Mock data utilized for exp date && year
+      valid: true,
+      name: null,
+      cardNumber: null,
+      date: null,
+      year: null,
+      cvc: null,
+
       dates: [
         "January",
         "Febuary",
@@ -65,13 +99,9 @@ export default {
 
   methods: {
     submit() {
-      this.$validator.validateAll().then(isValid => {
-        if (isValid) {
-          console.log(`Validation:` + true);
-        } else {
-          console.log(`Validation:` + false);
-        }
-      });
+      if (this.$refs.form.validate()) {
+        console.log("Submission");
+      }
     }
   }
 };
