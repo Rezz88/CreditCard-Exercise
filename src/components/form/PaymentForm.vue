@@ -56,16 +56,22 @@
       <v-layout>
         <v-checkbox :label="`Save my card for future purchases`" color="indigo darken-4"></v-checkbox>
       </v-layout>
-      <v-btn dark large color="indigo darken-4">
-        <span :disabled="!valid" @click="submit">PAY NOW</span>
-      </v-btn>
+      <v-layout row align-center>
+        <v-flex>
+          <v-btn dark large color="indigo darken-4">
+            <span :disabled="!valid" @click="submit">PAY NOW</span>
+          </v-btn>
+        </v-flex>
+        <v-flex pl-3>
+          <h2 class="msg">{{this.message}}</h2>
+        </v-flex>
+      </v-layout>
     </v-form>
   </v-container>
 </template>
 
 <script>
-import cardValidator from "@/api/cardValidator";
-
+import cardValidator from "../../api/cardValidator";
 export default {
   name: "PaymentForm",
 
@@ -78,6 +84,7 @@ export default {
       date: null,
       year: null,
       cvc: null,
+      message: null,
 
       dates: [
         "January",
@@ -98,9 +105,32 @@ export default {
   },
 
   methods: {
-    submit() {
+    async submit() {
       if (this.$refs.form.validate()) {
-        console.log("Submission");
+        const date = this.dates.indexOf(this.date) + 1;
+        const cardFields = {
+          cardNumber: this.cardNumber,
+          date: date.toString(),
+          year: this.year.toString(),
+          cvc: this.cvc
+        };
+        const results = await cardValidator(cardFields);
+        console.log(results);
+        if (
+          results.cardNumber &&
+          results.month &&
+          results.year &&
+          results.cvv
+        ) {
+          this.message = "You have successfully paid";
+          this.name = "-";
+          this.cardNumber = "-";
+          this.date = "-";
+          this.year = "-";
+          this.cvc = null;
+        } else {
+          this.message = "Incorrect information";
+        }
       }
     }
   }
@@ -108,4 +138,15 @@ export default {
 </script>
 
 <style lang='scss'>
+.msg {
+  font-size: 25px;
+  letter-spacing: 2px;
+  color: #ee6004;
+  text-shadow: 1px 1px 1px lightgray;
+
+  &:hover {
+    transform: scale(1.1);
+    transition: 0.3s;
+  }
+}
 </style>

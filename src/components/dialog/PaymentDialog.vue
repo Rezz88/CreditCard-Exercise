@@ -1,12 +1,19 @@
-// Payment dialog holds the card and payment form placement as well as the eventual back button.
+// Payment dialog holds the card and payment form placement.
 
 <template>
   <v-card hover>
-    <v-layout row justify-center indigo darken-4>
+    <v-layout row justify-center>
       <v-flex xs4 pl-2 class="bg_img">
-        <v-btn dark large icon>
-          <v-icon large>keyboard_backspace</v-icon>
-        </v-btn>
+        <v-layout>
+          <v-flex xs2>
+            <v-btn dark large icon>
+              <v-icon large>keyboard_backspace</v-icon>
+            </v-btn>
+          </v-flex>
+          <v-flex pt-2>
+            <div class="logo_img"></div>
+          </v-flex>
+        </v-layout>
       </v-flex>
       <v-layout row justify-center white pb-5>
         <v-flex xs8>
@@ -49,5 +56,13 @@ export default {
     url(../../assets/Care.png);
   background-position: center;
   background-size: cover;
+  -webkit-clip-path: circle(100% at 0 50%);
+  clip-path: circle(100% at 0 50%);
+}
+
+.logo_img {
+  width: 100%;
+  height: 100px;
+  background-image: url(../../assets/Logo.png);
 }
 </style>
