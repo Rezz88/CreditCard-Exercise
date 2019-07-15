@@ -72,6 +72,7 @@
 
 <script>
 import cardValidator from "../../api/cardValidator";
+
 export default {
   name: "PaymentForm",
 
@@ -123,8 +124,8 @@ export default {
           results.cvv
         ) {
           this.message = "You have successfully paid";
-          this.name = "-";
-          this.cardNumber = "-";
+          this.name = "✓";
+          this.cardNumber = "✓";
           this.date = "-";
           this.year = "-";
           this.cvc = null;
