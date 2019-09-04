@@ -5,12 +5,8 @@ Utilizing a modular and responsive approach to design with Vuetify as a Material
 
 ![AlayaCare Credit Card](/src/assets/Example.png)
 
-## Project setup
-```
-npm install
-```
+### `npm install`
+Project setup
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### `npm run serve`
+Compiles and hot-reloads for development
